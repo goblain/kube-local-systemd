@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes controller-manager process
+Requires=kube-apiserver.service
+After=kube-apiserver.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f kube-controller
+ExecStart=/usr/bin/docker run --net host --name kube-controller -v /etc/kubernetes:/etc/kubernetes gcr.io/google_containers/hyperkube:v1.3.0 /hyperkube controller-manager --root-ca-file /etc/kubernetes/ssl/ca.pem --service-account-private-key-file /etc/kubernetes/ssl/master-key.pem --kubeconfig /etc/kubernetes/kubeconfig
+TimeoutStartSec = 300
+Restart      = always
+RestartSec   = 5
+

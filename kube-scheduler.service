@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes scheduler process
+Requires=kube-apiserver.service
+After=kube-apiserver.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f kube-scheduler
+ExecStart=/usr/bin/docker run --net host --name kube-scheduler -v /etc/kubernetes:/etc/kubernetes gcr.io/google_containers/hyperkube:v1.3.0 /hyperkube scheduler --kubeconfig /etc/kubernetes/kubeconfig
+TimeoutStartSec = 300
+Restart      = always
+RestartSec   = 5
+

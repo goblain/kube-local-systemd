@@ -1,0 +1,9 @@
+[Unit]
+Description=Kubernetes proxy process
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f kube-proxy
+ExecStart=/usr/bin/docker run --name kube-proxy --net host --pid host --privileged -v /sys:/sys -v /etc/kubernetes:/etc/kubernetes gcr.io/google_containers/hyperkube:v1.3.0 /hyperkube proxy --iptables-sync-period 5s --proxy-mode iptables --hostname-override %H --kubeconfig /etc/kubernetes/kubeconfig
+TimeoutStartSec = 300
+Restart      = always
+RestartSec   = 5
+

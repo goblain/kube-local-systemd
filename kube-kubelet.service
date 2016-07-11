@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes kubelet process
+Requires=kube-apiserver.service
+After=kube-apiserver.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f kube-kubelet
+ExecStart=/usr/bin/docker run --name kube-kubelet --net host --pid host --privileged -v /etc/kubernetes:/etc/kubernetes -v /:/rootfs:ro -v /sys:/sys:ro -v /dev:/dev -v /var/lib/docker/:/var/lib/docker -v /var/lib/kubelet/:/var/lib/kubelet -v /var/run:/var/run gcr.io/google_containers/hyperkube:v1.3.0 /hyperkube kubelet --containerized --register-node false --cluster-dns=10.12.0.10 --cluster-domain=cluster.local --api-servers https://kubernetes:6443 --kubeconfig /etc/kubernetes/kubeconfig
+TimeoutStartSec = 300
+Restart      = always
+RestartSec   = 5
+

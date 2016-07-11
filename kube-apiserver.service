@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes apiserver process
+Requires=docker.service
+After=docker.service
+Requires=etcd.service
+After=etcd.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f kube-apiserver
+ExecStartPre=/usr/bin/docker pull gcr.io/google_containers/hyperkube:v1.3.0
+ExecStart=/usr/bin/docker run --name kube-apiserver --net host -v /etc/kubernetes/ssl:/ssl gcr.io/google_containers/hyperkube:v1.3.0 /hyperkube apiserver --service-cluster-ip-range 10.12.0.0/16 --etcd-servers http://192.168.101.1:2379 --bind-address 192.168.101.1 --apiserver-count=1 --client-ca-file /ssl/ca.pem --tls-cert-file /ssl/master.pem --tls-private-key-file /ssl/master-key.pem --secure-port 6443
+
